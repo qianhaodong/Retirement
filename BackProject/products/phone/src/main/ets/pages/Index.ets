@@ -1,10 +1,15 @@
 import { Home } from '@ec/home/Index';
-
 import { TabBarItem } from '../model';
+import { windowManager } from '../utils';
+
+// 开启沉浸式
+windowManager.enableFullScreen();
 
 @Entry
 @Component
 struct Index {
+  @StorageProp('bottomHeight')
+  bottomHeight: number = 0;
   @State
   currentIndex: number = 0;
   @State
@@ -64,5 +69,6 @@ struct Index {
     .onChange(index => {
       this.currentIndex = index;
     })
+    .padding({ bottom: this.bottomHeight })
   }
 }

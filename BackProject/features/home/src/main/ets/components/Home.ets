@@ -37,7 +37,7 @@ struct Home {
 
   @Builder
   CareItemBuilder(value: string, icon: ResourceStr) {
-    Row() {
+    Row({ space: 10 }) {
       Image(icon)
         .width(48)
         .aspectRatio(1)
@@ -51,7 +51,7 @@ struct Home {
 
   @Builder
   DeviceItemBuilder(value: string, icon: ResourceStr) {
-    Column() {
+    Column({ space: 10 }) {
       Image(icon)
         .width(40)
         .aspectRatio(1)
