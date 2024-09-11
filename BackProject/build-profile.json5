@@ -1,0 +1,74 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\25420\\.ohos\\config\\default_BackProject_cK_-Jow52AKShN-FMb88V4yWPUxolTIwmVPeq1ATh98=.cer",
+          "storePassword": "0000001B030CCE8DC9E5048380FDA69EE08000796B68B134A23CBF3ADA9E4B626B7FE8FFD233E99927B015",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B59146ED85248BCFE962CF1534B41EAA47D478CFFEC74744ED69C05F210B5E76EC33583F6F0A9B3",
+          "profile": "C:\\Users\\25420\\.ohos\\config\\default_BackProject_cK_-Jow52AKShN-FMb88V4yWPUxolTIwmVPeq1ATh98=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\25420\\.ohos\\config\\default_BackProject_cK_-Jow52AKShN-FMb88V4yWPUxolTIwmVPeq1ATh98=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compileSdkVersion": "4.1.0(11)",
+        "compatibleSdkVersion": "4.1.0(11)",
+        "runtimeOS": "HarmonyOS",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "phone",
+      "srcPath": "./products/phone",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "basic",
+      "srcPath": "./commons/basic",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "home",
+      "srcPath": "./features/home",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

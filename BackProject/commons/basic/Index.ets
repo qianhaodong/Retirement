@@ -1,0 +1,1 @@
+export { ResManager } from "./src/main/ets/utils/ResManager";
