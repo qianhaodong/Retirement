@@ -1,6 +1,8 @@
-import { Home } from '@ec/home/Index';
 import { TabBarItem } from '../model';
 import { windowManager } from '../utils';
+
+import { Home } from '@ec/home/Index';
+import { Duty } from '@ec/duty/Index';
 
 // 开启沉浸式
 windowManager.enableFullScreen();
@@ -59,6 +61,8 @@ struct Index {
         TabContent() {
           if (index === 0) {
             Home()
+          } else if (index === 1) {
+            Duty()
           } else {
             Text(item.label)
           }

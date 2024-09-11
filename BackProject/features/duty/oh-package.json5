@@ -1,5 +1,5 @@
 {
-  "name": "home",
+  "name": "duty",
   "version": "1.0.0",
   "description": "Please describe the basic information.",
   "main": "Index.ets",
@@ -7,7 +7,6 @@
   "license": "Apache-2.0",
   "packageType": "InterfaceHar",
   "dependencies": {
-    "@hm/basic": "file:../../commons/basic",
-    "@ec/message": "file:../message"
+    "@hm/basic": "file:../../commons/basic"
   }
 }

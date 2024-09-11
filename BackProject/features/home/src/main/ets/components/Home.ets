@@ -1,4 +1,6 @@
 import { ResManager } from '@hm/basic/Index'
+import router from '@ohos.router'
+import('@ec/message/src/main/ets/pages/Index');
 
 @Component
 struct Home {
@@ -33,6 +35,16 @@ struct Home {
     }
     .boxStyles()
     .padding({ top: 20, bottom: 23 })
+    .onClick(() => {
+      /*router.pushUrl({
+        url: '@bundle:com.example.backproject/message/ets/pages/Index',
+      })*/
+
+      // 命名路由，跳转共享包
+      router.pushNamedRoute({
+        name: 'messagePage'
+      })
+    })
   }
 
   @Builder
