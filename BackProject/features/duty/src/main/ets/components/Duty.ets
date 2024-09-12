@@ -13,6 +13,13 @@ export struct Duty {
   @State
   refreshStatus: RefreshStatus = RefreshStatus.Inactive;
 
+  @State
+  list: number[] = [];
+  @State
+  loading: boolean = false;
+  @State
+  finished: boolean = false;
+
   @Builder
   CardItem(item: number) {
     Row({ space: 14 }) {
@@ -89,10 +96,42 @@ export struct Duty {
         })
 
       Text(this.refreshStatusTxt())
-        .fontColor('#595959')
-        .fontSize(14)
+        .fontColor(ResManager.EC_MID_59)
+        .fontSize(ResManager.EC_NORMAL_FS)
     }
     .margin(30)
+  }
+
+  @Builder
+  loadingBuilder() {
+    if (this.finished) {
+      ListItem() {
+        Row() {
+          Text('没有更多了...')
+            .fontColor(ResManager.EC_MID_59)
+            .fontSize(ResManager.EC_NORMAL_FS)
+        }
+        .width('100%')
+        .height(50)
+        .justifyContent(FlexAlign.Center)
+      }
+    } else {
+      if (this.loading) {
+        ListItem() {
+          Row() {
+            LoadingProgress()
+              .width(24)
+              .margin({ right: 5 })
+            Text('加载中...')
+              .fontColor(ResManager.EC_MID_59)
+              .fontSize(ResManager.EC_NORMAL_FS)
+          }
+          .width('100%')
+          .height(50)
+          .justifyContent(FlexAlign.Center)
+        }
+      }
+    }
   }
 
   refreshStatusTxt() {
@@ -106,6 +145,51 @@ export struct Duty {
       default:
         return '';
     }
+  }
+
+  // 钩子函数
+  /*aboutToAppear() {
+    // 初始化数据
+    this.loading = true;
+    this.handleRefresh()
+  }*/
+
+  // 刷新数据
+  handleRefresh() {
+    setTimeout(() => {
+      // 初始化数据
+      this.loading = false;
+      this.finished = false;
+      this.list = [];
+
+      for (let i = 0; i < 10; i++) {
+        this.list.push(i + 1);
+      }
+
+      // 关闭刷新状态
+      this.refreshing = false;
+    }, 1500);
+  }
+
+  // 触底加载（List组件，在列表为空时，会触发一次触底事件）
+  handleReachEndLoad() {
+    if (this.loading || this.finished) return;
+
+    Log.info('触底')
+    // 加锁，防止连续触发
+    this.loading = true;
+
+    // 加载数据
+    setTimeout(() => {
+      for (let i = 0; i < 10; i++) {
+        this.list.push(i + 1);
+      }
+
+      this.loading = false;
+      if (this.list.length > 25) {
+        this.finished = true;
+      }
+    }, 2000);
   }
 
   build() {
@@ -123,15 +207,22 @@ export struct Duty {
       // 列表
       Refresh({ refreshing: $$this.refreshing, builder: this.RefreshBuilder() }) {
         List({ space: 10 }) {
-          ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], (item: number) => {
+          ForEach(this.list, (item: number) => {
             ListItem() {
               this.CardItem(item)
             }
           })
+
+          if (this.refreshStatus !== RefreshStatus.Refresh) {
+            this.loadingBuilder()
+          }
         }
-        .height('100%')
+        .layoutWeight(1)
         .width('100%')
         .scrollBar(BarState.Off)
+        .onReachEnd(() => {
+          this.handleReachEndLoad()
+        })
       }
       .layoutWeight(1)
       .padding({
@@ -139,9 +230,8 @@ export struct Duty {
         right: ResManager.SIZE_GUTTER_LG
       })
       .onRefreshing(() => {
-        setTimeout(() => {
-          this.refreshing = false;
-        }, 1500);
+        Log.info('刷新中')
+        this.handleRefresh();
       })
       .onStateChange((state: RefreshStatus) => {
         this.refreshStatus = state;

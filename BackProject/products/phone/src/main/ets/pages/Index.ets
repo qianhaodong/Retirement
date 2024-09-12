@@ -3,6 +3,8 @@ import { windowManager } from '../utils';
 
 import { Home } from '@ec/home/Index';
 import { Duty } from '@ec/duty/Index';
+import { Stage } from '@ec/stage/Index';
+import { Mine } from '@ec/mine/Index';
 
 // 开启沉浸式
 windowManager.enableFullScreen();
@@ -63,8 +65,10 @@ struct Index {
             Home()
           } else if (index === 1) {
             Duty()
+          } else if (index === 2) {
+            Stage()
           } else {
-            Text(item.label)
+            Mine()
           }
         }
         .tabBar(this.TabBarBuilder(item, index))
