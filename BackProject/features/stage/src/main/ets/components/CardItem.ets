@@ -1,9 +1,40 @@
 import { ResManager } from '@hm/basic/Index'
+import { promptAction } from '@kit.ArkUI';
 
 @Component
 export struct CardItem {
   @Prop
-  cardData: string = ''
+  cardData: string = '';
+
+  // 选中日期
+  selectedDate: Date = new Date();
+
+  // 改期
+  handleChangeDate() {
+    DatePickerDialog.show({
+      start: new Date("2000-1-1"),
+      end: new Date("2100-12-31"),
+      selected: this.selectedDate,
+      showTime: true,
+      useMilitaryTime: true,
+      selectedTextStyle: {
+        color: ResManager.EC_MAIN_COLOR,
+        font: { size: ResManager.EC_MODULE_TITLE_FS, weight: FontWeight.Regular }
+      },
+      onDateAccept: (value: Date) => {
+        const now: Date = new Date()
+        if (value.getTime() < now.getTime()) {
+          setTimeout(() => {
+            promptAction.showToast({
+              message: '选择日期时间必须大于当前时间！'
+            })
+            this.selectedDate = now
+          })
+        }
+        this.selectedDate = value
+      },
+    })
+  }
 
   build() {
     Column({ space: 14 }) {
@@ -45,11 +76,14 @@ export struct CardItem {
           .fontSize(ResManager.EC_SMALL_FS)
           .fontColor(ResManager.EC_MAIN_COLOR)
           .backgroundColor('#fff')
-        Button('改造')
+        Button('改期')
           .height(28)
           .fontSize(ResManager.EC_SMALL_FS)
           .fontColor(ResManager.EC_MAIN_COLOR)
           .backgroundColor('#fff')
+          .onClick(() => {
+            this.handleChangeDate()
+          })
         Button('执行')
           .height(28)
           .fontSize(ResManager.EC_SMALL_FS)
