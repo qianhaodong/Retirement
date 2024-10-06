@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\25420\\.ohos\\config\\default_BackProject_cK_-Jow52AKShN-FMb88V4yWPUxolTIwmVPeq1ATh98=.cer",
-          "storePassword": "0000001B030CCE8DC9E5048380FDA69EE08000796B68B134A23CBF3ADA9E4B626B7FE8FFD233E99927B015",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001B59146ED85248BCFE962CF1534B41EAA47D478CFFEC74744ED69C05F210B5E76EC33583F6F0A9B3",
-          "profile": "C:\\Users\\25420\\.ohos\\config\\default_BackProject_cK_-Jow52AKShN-FMb88V4yWPUxolTIwmVPeq1ATh98=.p7b",
+          "storePassword": "000000198F0BA7ACABF8A1012CFCDEA47A7373362B039102936B4AC53D12CE2DB7361CB0AC50D6A08F",
+          "certpath": "C:/HarmonyOS/HarmonyOS-P12/wing-care-debug.cer",
+          "keyAlias": "firstKey",
+          "keyPassword": "00000019A604681490FCAC8B399205EB28699F9DC3B1C77521AD5B54E02C2B63CA539C02D0B53449F6",
+          "profile": "C:/HarmonyOS/HarmonyOS-P12/Debug_ProfileDebug.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\25420\\.ohos\\config\\default_BackProject_cK_-Jow52AKShN-FMb88V4yWPUxolTIwmVPeq1ATh98=.p12"
+          "storeFile": "C:/HarmonyOS/HarmonyOS-P12/backProject.p12"
         }
       }
     ],
