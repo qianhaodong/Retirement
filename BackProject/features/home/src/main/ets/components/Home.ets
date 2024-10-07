@@ -1,9 +1,16 @@
 import { ResManager } from '@hm/basic/Index'
 import router from '@ohos.router'
+import { statisticsUnreadByType } from '../api';
+import { MessageCountData } from '../models';
+import { Log } from '@abner/log';
+
 import('@ec/message/src/main/ets/pages/Index');
 
 @Component
 struct Home {
+  @State
+  unreadMessages: MessageCountData | null = null;
+
   @Styles
   boxStyles() {
     .layoutWeight(1)
@@ -12,10 +19,10 @@ struct Home {
   }
 
   @Builder
-  MessageItemBuilder(value: string, count: number, index: number, icon: ResourceStr) {
+  MessageItemBuilder(value: string, index: number, icon: ResourceStr) {
     Column() {
       Badge({
-        count,
+        count: index === 0 ? this.unreadMessages?.elderAlertMsgCount! : this.unreadMessages?.nursingTaskMsgCount!,
         style: {
           badgeColor: '#FF6363',
           borderColor: '#fff',
@@ -75,6 +82,19 @@ struct Home {
     .padding({ top: 23, bottom: 23 })
   }
 
+  // 获取未读消息
+  async getUnreadMessages() {
+    const data = await statisticsUnreadByType();
+    Log.info(data);
+    // data.elderAlertMsgCount += 1;
+    // data.nursingTaskMsgCount += 2;
+    this.unreadMessages = data;
+  }
+
+  aboutToAppear() {
+    this.getUnreadMessages();
+  }
+
   build() {
     Stack({
       alignContent: Alignment.Bottom
@@ -87,8 +107,8 @@ struct Home {
             .aspectRatio(1.32)
 
           Row({ space: 10 }) {
-            this.MessageItemBuilder('老人报警消息', 6, 0, $r("app.media.ic_home_jkbj"))
-            this.MessageItemBuilder('任务提醒消息', 2, 1, $r("app.media.ic_home_rwtx"))
+            this.MessageItemBuilder('老人报警消息', 0, $r("app.media.ic_home_jkbj"))
+            this.MessageItemBuilder('任务提醒消息', 1, $r("app.media.ic_home_rwtx"))
           }
           .width('100%')
           .padding({

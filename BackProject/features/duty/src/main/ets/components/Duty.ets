@@ -1,6 +1,8 @@
 import { ResManager } from '@hm/basic/Index';
 import { Log } from '@abner/log';
 import { promptAction } from '@kit.ArkUI';
+import { getDutyList } from '../api';
+import { RecordItemData } from '../models';
 
 @Component
 export struct Duty {
@@ -14,44 +16,48 @@ export struct Duty {
   refreshStatus: RefreshStatus = RefreshStatus.Inactive;
 
   @State
-  list: number[] = [];
+  list: RecordItemData[] = [];
+  @State
+  pageNum: number = 1;
+  @State
+  pageSize: number = 10;
   @State
   loading: boolean = false;
   @State
   finished: boolean = false;
 
   @Builder
-  CardItem(item: number) {
+  CardItem(item: RecordItemData) {
     Row({ space: 14 }) {
-      Image('https://img1.baidu.com/it/u=1944934302,3144710326&fm=253&fmt=auto&app=138&f=JPEG?w=190&h=190')
+      Image(item.avatar)
         .width(80)
         .height(80)
         .borderRadius(8)
 
       Column({ space: 6 }) {
         Row({ space:15 }) {
-          Text('李玉虎')
+          Text(item.name)
             .fontColor(ResManager.EC_MID_BLACK)
             .fontSize(ResManager.EC_PAGE_TITLE_FS)
             .fontWeight(500)
             .margin({ bottom: 5 })
-          Text('64岁')
+          Text(`${item.age}岁`)
             .fontColor(ResManager.EC_MID_59)
             .fontSize(13)
-          Text('男')
+          Text(item.sex === 0 ? '男' : '女')
             .width(36)
             .height(20)
             .borderRadius(10)// 女bg：#FFF0D9
-            .backgroundColor('#DBF0FF')
+            .backgroundColor(item.sex === 0 ? '#DBF0FF' : '#FFF0D9')
             .textAlign(TextAlign.Center)
             .fontColor(ResManager.EC_SUB_BLUE)
             .fontSize(ResManager.EC_SMALL_FS)
         }
 
-        Text('床位：四人间-1012床')
+        Text(`床位：${item.bedNumber}床`)
           .fontColor(ResManager.EC_MID_59)
           .fontSize(13)
-        Text('护理等级：特级护理')
+        Text(`护理等级：${item.nursingLevelName}`)
           .fontColor(ResManager.EC_MID_59)
           .fontSize(13)
 
@@ -154,42 +160,50 @@ export struct Duty {
     this.handleRefresh()
   }*/
 
+  async getRecordData() {
+    return await getDutyList({
+      pageNum: this.pageNum,
+      pageSize: this.pageSize
+    });
+  }
+
+  // 判断是否最后一页
+  listenReachBottom(total: number) {
+    if (this.pageNum * this.pageSize > total) {
+      this.finished = true;
+    }
+  }
+
   // 刷新数据
-  handleRefresh() {
-    setTimeout(() => {
-      // 初始化数据
-      this.loading = false;
-      this.finished = false;
-      this.list = [];
+  async handleRefresh() {
+    // 初始化数据
+    this.loading = false;
+    this.finished = false;
+    this.pageNum = 1;
 
-      for (let i = 0; i < 10; i++) {
-        this.list.push(i + 1);
-      }
+    const data = await this.getRecordData();
+    this.list = data.records!;
+    this.listenReachBottom(parseInt(data.total!));
 
-      // 关闭刷新状态
-      this.refreshing = false;
-    }, 1500);
+    // 关闭刷新状态
+    this.refreshing = false;
   }
 
   // 触底加载（List组件，在列表为空时，会触发一次触底事件）
-  handleReachEndLoad() {
-    if (this.loading || this.finished) return;
+  async handleReachEndLoad() {
+    if (this.loading || this.finished || this.refreshing) return;
 
     Log.info('触底')
     // 加锁，防止连续触发
     this.loading = true;
 
     // 加载数据
-    setTimeout(() => {
-      for (let i = 0; i < 10; i++) {
-        this.list.push(i + 1);
-      }
-
-      this.loading = false;
-      if (this.list.length > 25) {
-        this.finished = true;
-      }
-    }, 2000);
+    const data = await this.getRecordData();
+    // Log.info(data);
+    this.list = this.list.concat(data.records!);
+    this.listenReachBottom(parseInt(data.total!));
+    this.loading = false;
+    this.pageNum++;
   }
 
   build() {
@@ -207,7 +221,7 @@ export struct Duty {
       // 列表
       Refresh({ refreshing: $$this.refreshing, builder: this.RefreshBuilder() }) {
         List({ space: 10 }) {
-          ForEach(this.list, (item: number) => {
+          ForEach(this.list, (item: RecordItemData) => {
             ListItem() {
               this.CardItem(item)
             }
@@ -217,7 +231,7 @@ export struct Duty {
             this.loadingBuilder()
           }
         }
-        .layoutWeight(1)
+        .height('100%')
         .width('100%')
         .scrollBar(BarState.Off)
         .onReachEnd(() => {
@@ -235,7 +249,6 @@ export struct Duty {
       })
       .onStateChange((state: RefreshStatus) => {
         this.refreshStatus = state;
-        // Log.info(state.toString())
         if (state === RefreshStatus.Done) {
           promptAction.showToast({
             message: '刷新成功'

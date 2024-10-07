@@ -117,7 +117,7 @@ struct LoginPage {
               .width(24)
               .margin({ right: 5 })
               .color('#fff')
-            Text('登录中...')
+            Text('登录中')
               .fontColor(ResManager.EC_MID_WHITE)
               .fontSize(ResManager.EC_NORMAL_FS)
           }

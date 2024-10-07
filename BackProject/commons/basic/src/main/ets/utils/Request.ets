@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosHeaders, AxiosResponse, InternalAxiosRequestCon
 import { userStore } from './Auth';
 import { router } from '@kit.ArkUI';
 import { RouterConfig } from '../constants/RouterConfig';
+import { delayTime } from './Util';
 
 const instance = axios.create({
   baseURL: 'https://zhyl-harmony.itheima.net',
@@ -72,7 +73,9 @@ interface RequestParams<D> {
 }
 
 // 封装请求方法
-function request<T = null, D = null>(requestParams: RequestParams<D>): Promise<T> {
+async function request<T = null, D = null>(requestParams: RequestParams<D>): Promise<T> {
+  // 延迟一秒，预览数据加载效果
+  await delayTime(1000);
   return instance<null, T>(requestParams);
 }
 

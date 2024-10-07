@@ -1,10 +1,11 @@
 import { ResManager } from '@hm/basic/Index'
 import { promptAction } from '@kit.ArkUI';
+import { StageTaskItemClass } from '../models';
 
 @Component
 export struct CardItem {
-  @Prop
-  cardData: string = '';
+  @ObjectLink
+  cardData: StageTaskItemClass;
 
   // 选中日期
   selectedDate: Date = new Date();
@@ -39,36 +40,38 @@ export struct CardItem {
   build() {
     Column({ space: 14 }) {
       Row() {
-        Text('李玉虎')
+        Text(this.cardData.elderName)
           .fontColor(ResManager.EC_MID_BLACK)
           .fontSize(ResManager.EC_PAGE_TITLE_FS)
           .fontWeight(500)
           .margin({ bottom: 5 })
-        Button('护理计划内')
+        Button(this.cardData.taskType === 1 ? '护理计划内' : '护理计划外')
           .height(20)
           .borderRadius(10)// 计划外 bg：#FFF0D9
-          .backgroundColor('#DBF0FF')
-          .fontColor(ResManager.EC_SUB_BLUE)
+          .backgroundColor(this.cardData.taskType === 1 ? '#DBF0FF' : '#FFF0D9')
+          .fontColor(this.cardData.taskType === 1 ? ResManager.EC_SUB_BLUE : ResManager.EC_SUB_YELLOW)
           .fontSize(ResManager.EC_SMALL_FS)
           .padding({ left: 6, right: 6 })
       }
       .width('100%')
       .justifyContent(FlexAlign.SpaceBetween)
 
-      Text('期望服务时间：2024年9月12日 16:00')
+      Text(`期望服务时间：${this.cardData.estimatedServerTime}`)
         .fontColor(ResManager.EC_MID_59)
         .fontSize(13)
 
-      Row() {
-        Text('喂饭的时候用老人自己的餐具，喂饭的时候用老人自己的餐具，喂饭的时候用老人自己的餐具')
-          .fontSize(ResManager.EC_SMALL_FS)
-          .fontColor('#50A0D8')
-          .lineHeight(20)
+      if (this.cardData.mark) {
+        Row() {
+          Text(this.cardData.mark)
+            .fontSize(ResManager.EC_SMALL_FS)
+            .fontColor('#50A0D8')
+            .lineHeight(20)
+        }
+        .width('100%')
+        .backgroundColor('#E9F6FF')
+        .borderRadius(5)
+        .padding({ left: 10, right: 10, top: 5, bottom: 8 })
       }
-      .width('100%')
-      .backgroundColor('#E9F6FF')
-      .borderRadius(5)
-      .padding({ left: 10, right: 10, top: 5, bottom: 8 })
 
       Row() {
         Button('取消')
